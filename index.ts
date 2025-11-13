@@ -28,7 +28,13 @@ app.use("*", async (c, next) => {
 app.route("/api", api);
 
 // Serve static files for React dashboard
-app.use("/dashboard/*", serveStatic({ root: "./dashboard/dist" }));
+app.use(
+	"/dashboard/*",
+	serveStatic({
+		root: "./dashboard/dist",
+		rewriteRequestPath: (path) => path.replace(/^\/dashboard/, ""),
+	}),
+);
 app.get("/dashboard", serveStatic({ path: "./dashboard/dist/index.html" }));
 
 // Health check at root

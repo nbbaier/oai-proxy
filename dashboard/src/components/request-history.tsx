@@ -54,7 +54,7 @@ export function RequestHistory({
 	return (
 		<Card>
 			<CardHeader>
-				<div className="flex items-center justify-between">
+				<div className="flex justify-between items-center">
 					<CardTitle className="text-2xl">Request History</CardTitle>
 					<Button
 						onClick={onRefresh}
@@ -120,7 +120,7 @@ export function RequestHistory({
 									<TableCell className="text-right">
 										{formatNumber(entry.completion_tokens)}
 									</TableCell>
-									<TableCell className="text-right font-semibold">
+									<TableCell className="font-semibold text-right">
 										{formatNumber(entry.total_tokens)}
 									</TableCell>
 									<TableCell>
@@ -133,14 +133,14 @@ export function RequestHistory({
 				</div>
 
 				{data && data.data.length > 0 && (
-					<div className="flex items-center justify-center gap-4 pt-4">
+					<div className="flex gap-4 justify-center items-center pt-4">
 						<Button
 							variant="outline"
 							size="sm"
 							onClick={onPrevPage}
 							disabled={!canGoPrev}
 						>
-							<ChevronLeft className="mr-1 h-4 w-4" />
+							<ChevronLeft className="mr-1 w-4 h-4" />
 							Previous
 						</Button>
 
@@ -155,7 +155,7 @@ export function RequestHistory({
 							disabled={!canGoNext}
 						>
 							Next
-							<ChevronRight className="ml-1 h-4 w-4" />
+							<ChevronRight className="ml-1 w-4 h-4" />
 						</Button>
 					</div>
 				)}

@@ -1,4 +1,5 @@
 import { RefreshCw } from "lucide-react";
+import { Models } from "openai/resources.js";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +12,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { cn, formatNumber, formatPercentage } from "@/lib/utils";
 import type { ReconcileResponse, TierUsage } from "@/types/api";
+import { InfoTooltip } from "./info-tooltip";
 
 interface UsageOverviewProps {
 	date: string;
@@ -46,13 +48,27 @@ function TierCard({ title, limit, models, usage, variant }: TierCardProps) {
 	return (
 		<div className="p-6 space-y-4 rounded-lg border bg-card/50">
 			<div className="flex justify-between items-center">
-				<h3 className="text-lg font-semibold">{title}</h3>
+				<h3 className="flex gap-2 items-center text-lg font-semibold">
+					{title}{" "}
+					<InfoTooltip
+						content={
+							<div className="space-y-1">
+								<p className="text-sm font-semibold">Available Models</p>
+
+								<ul className="space-y-1 text-xs">
+									{models.split(", ").map((model) => (
+										<li key={model}>{model}</li>
+									))}
+								</ul>
+							</div>
+						}
+						side="right"
+					/>
+				</h3>
 				<Badge variant={variant === "premium" ? "default" : "secondary"}>
 					{limit}
 				</Badge>
 			</div>
-
-			<p className="text-sm text-muted-foreground">{models}</p>
 
 			<div className="space-y-2">
 				<Progress value={Math.min(percentage, 100)} className="h-3" />
@@ -123,7 +139,7 @@ export function UsageOverview({
 					<TierCard
 						title="Premium Tier"
 						limit="1M tokens/day"
-						models="gpt-5, gpt-5-codex, gpt-5-chat-latest, gpt-4.1, gpt-4o, o1, o3"
+						models="gpt-5, gpt-5-codex, gpt-5-chat-latest, gpt-4.1, gpt-4o, o1, o3" // TODO: Add models
 						usage={premium}
 						variant="premium"
 					/>
@@ -131,7 +147,7 @@ export function UsageOverview({
 					<TierCard
 						title="Mini Tier"
 						limit="10M tokens/day"
-						models="gpt-5-mini, gpt-5-nano, gpt-4.1-mini, gpt-4.1-nano, gpt-4o-mini, o1-mini, o3-mini, o4-mini, codex-mini-latest"
+						models="gpt-5-mini, gpt-5-nano, gpt-4.1-mini, gpt-4.1-nano, gpt-4o-mini, o1-mini, o3-mini, o4-mini, codex-mini-latest" // TODO: Add models
 						usage={mini}
 						variant="mini"
 					/>
