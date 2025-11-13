@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenAI Token Tracker - Dashboard</title>
+    <link rel="stylesheet" href="/dashboard/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>OpenAI Token Tracker</h1>
+        <p class="subtitle">Monitor your daily token usage across OpenAI models</p>
+      </header>
+
+      <main>
+        <!-- Usage Overview Section -->
+        <section class="card">
+          <div class="section-header">
+            <div>
+              <h2>Token Usage Overview</h2>
+              <p class="date" id="current-date">Loading...</p>
+            </div>
+            <button class="btn-reconcile" id="reconcile-btn" onclick="reconcileUsage()">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+              </svg>
+              Reconcile with OpenAI
+            </button>
+          </div>
+          <div id="reconcile-status" class="reconcile-status"></div>
+
+          <div class="usage-grid">
+            <!-- Premium Tier -->
+            <div class="usage-item">
+              <div class="usage-header">
+                <h3>Premium Tier</h3>
+                <span class="usage-badge">1M tokens/day</span>
+              </div>
+              <p class="usage-models">
+                gpt-5, gpt-5-codex, gpt-5-chat-latest, gpt-4.1, gpt-4o, o1, o3
+              </p>
+              <div class="progress-container">
+                <div class="progress-bar" id="premium-progress"></div>
+              </div>
+              <div class="usage-stats">
+                <span id="premium-used">0</span> / <span id="premium-limit">1,000,000</span> tokens
+                <span class="percentage" id="premium-percentage">0%</span>
+              </div>
+            </div>
+
+            <!-- Mini Tier -->
+            <div class="usage-item">
+              <div class="usage-header">
+                <h3>Mini Tier</h3>
+                <span class="usage-badge">10M tokens/day</span>
+              </div>
+              <p class="usage-models">
+                gpt-5-mini, gpt-5-nano, gpt-4.1-mini, gpt-4.1-nano, gpt-4o-mini, o1-mini,
+                o3-mini, o4-mini, codex-mini-latest
+              </p>
+              <div class="progress-container">
+                <div class="progress-bar" id="mini-progress"></div>
+              </div>
+              <div class="usage-stats">
+                <span id="mini-used">0</span> / <span id="mini-limit">10,000,000</span> tokens
+                <span class="percentage" id="mini-percentage">0%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Request History Section -->
+        <section class="card">
+          <div class="section-header">
+            <h2>Request History</h2>
+            <button class="btn-refresh" id="refresh-btn" onclick="refreshData()">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path
+                  d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"
+                />
+                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+              </svg>
+              Refresh
+            </button>
+          </div>
+
+          <div class="table-container">
+            <table id="history-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Model</th>
+                  <th>Tier</th>
+                  <th>Prompt Tokens</th>
+                  <th>Completion Tokens</th>
+                  <th>Total Tokens</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="history-tbody">
+                <tr>
+                  <td colspan="7" class="loading">Loading...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination" id="pagination">
+            <button id="prev-btn" onclick="prevPage()" disabled>Previous</button>
+            <span id="page-info">Page 1</span>
+            <button id="next-btn" onclick="nextPage()">Next</button>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>
+          Token limits reset daily at midnight (configured timezone).
+          <a href="/api/usage" target="_blank">View API</a>
+        </p>
+      </footer>
+    </div>
+
+    <script src="/dashboard/app.js"></script>
+  </body>
+</html>

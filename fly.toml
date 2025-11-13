@@ -1,0 +1,39 @@
+# fly.toml app configuration file
+# See https://fly.io/docs/reference/configuration/ for documentation
+
+app = "oai-token-tracker"
+primary_region = "sjc"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "3000"
+  NODE_ENV = "production"
+  TIMEZONE = "UTC"
+  PREMIUM_TIER_LIMIT = "1000000"
+  MINI_TIER_LIMIT = "10000000"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[http_service.checks]]
+  interval = "30s"
+  timeout = "5s"
+  grace_period = "10s"
+  method = "GET"
+  path = "/api/health"
+
+[mounts]
+  source = "oai_proxy_data"
+  destination = "/app/db"
+  initial_size = "1GB"
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1
