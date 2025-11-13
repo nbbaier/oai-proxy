@@ -25,14 +25,14 @@ export async function proxyRequest(c: Context): Promise<Response> {
 
 	// Get the model from the request body
 	let model: string | undefined;
-	let requestBody: any;
+	let requestBody: Record<string, unknown>;
 
 	try {
 		// Clone the request to read the body
 		const bodyText = await c.req.text();
 		requestBody = bodyText ? JSON.parse(bodyText) : {};
-		model = requestBody.model;
-	} catch (error) {
+		model = requestBody.model as string | undefined;
+	} catch (_error) {
 		return c.json(
 			{
 				error: {
@@ -99,9 +99,9 @@ export async function proxyRequest(c: Context): Promise<Response> {
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: `Bearer ${config.OPENAI_API_KEY}`,
-				// Forward other relevant headers
+				// Forward other relevant Headers
 				...(c.req.header("OpenAI-Organization") && {
-					"OpenAI-Organization": c.req.header("OpenAI-Organization")!,
+					"OpenAI-Organization": c.req.header("OpenAI-Organization") ?? "",
 				}),
 			},
 			body: JSON.stringify(requestBody),
@@ -117,7 +117,8 @@ export async function proxyRequest(c: Context): Promise<Response> {
 			return new Response(openaiResponse.body, {
 				status: openaiResponse.status,
 				headers: {
-					"Content-Type": openaiResponse.headers.get("Content-Type") || "text/event-stream",
+					"Content-Type":
+						openaiResponse.headers.get("Content-Type") || "text/event-stream",
 					"Cache-Control": "no-cache",
 					Connection: "keep-alive",
 					"Access-Control-Allow-Origin": "*",
@@ -127,7 +128,7 @@ export async function proxyRequest(c: Context): Promise<Response> {
 
 		// Handle non-streaming responses
 		const responseClone = openaiResponse.clone();
-		const responseData = await responseClone.json();
+		const responseData = (await responseClone.json()) as OpenAIResponse;
 
 		// Extract token usage if available
 		const usage: OpenAIUsage | undefined = responseData.usage;
@@ -179,7 +180,7 @@ export async function proxyRequest(c: Context): Promise<Response> {
 /**
  * Handle OPTIONS requests for CORS
  */
-export function handleOptions(c: Context): Response {
+export function handleOptions(_c: Context): Response {
 	return new Response(null, {
 		status: 204,
 		headers: {
