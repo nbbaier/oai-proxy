@@ -49,12 +49,3 @@ export function getModelTier(model: string): ModelTier {
 	console.warn(`Unknown model "${model}" - defaulting to premium tier`);
 	return "premium";
 }
-
-/**
- * Get all models for a given tier
- * @param tier The model tier
- * @returns Array of model prefixes for that tier
- */
-export function getModelsForTier(tier: ModelTier): string[] {
-	return tier === "premium" ? PREMIUM_MODELS : MINI_MODELS;
-}

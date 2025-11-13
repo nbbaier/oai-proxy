@@ -50,7 +50,7 @@ interface UsageResponse {
  * Fetch usage data from OpenAI's Usage API
  * Requires an Admin API key from OpenAI organization settings
  */
-export async function fetchOpenAIUsage(
+async function fetchOpenAIUsage(
 	startTime: number,
 	endTime?: number,
 	adminKey?: string,
@@ -403,13 +403,4 @@ export async function reconcileUsage(date?: string): Promise<{
 		);
 		throw error;
 	}
-}
-
-/**
- * Get the start of today in Unix timestamp (UTC)
- */
-export function getTodayStartTimestamp(): number {
-	const today = getCurrentDate();
-	const dateObj = new Date(`${today}T00:00:00Z`);
-	return Math.floor(dateObj.getTime() / 1000);
 }

@@ -164,7 +164,7 @@ export function getUsageRecord(tier: ModelTier): UsageRecord | undefined {
 /**
  * Insert or update usage record
  */
-export function upsertUsageRecord(record: UsageRecord): void {
+function upsertUsageRecord(record: UsageRecord): void {
 	const stmt = db.prepare(`
     INSERT INTO usage_records (tier, date, tokens_used, "limit")
     VALUES (?, ?, ?, ?)
@@ -193,7 +193,7 @@ export function incrementTokens(tier: ModelTier, tokens: number): void {
 /**
  * Reset usage record for a tier
  */
-export function resetUsageRecord(tier: ModelTier): void {
+function resetUsageRecord(tier: ModelTier): void {
 	const config = getConfig();
 	const limit =
 		tier === "premium" ? config.PREMIUM_TIER_LIMIT : config.MINI_TIER_LIMIT;
@@ -291,7 +291,7 @@ export function getRequestHistoryCount(): number {
 /**
  * Get a config value
  */
-export function getConfigValue(key: string): string | undefined {
+function getConfigValue(key: string): string | undefined {
 	const stmt = db.prepare("SELECT value FROM config WHERE key = ?");
 	const result = stmt.get(key) as Config | undefined;
 	return result?.value;
@@ -300,7 +300,7 @@ export function getConfigValue(key: string): string | undefined {
 /**
  * Set a config value
  */
-export function setConfigValue(key: string, value: string): void {
+function setConfigValue(key: string, value: string): void {
 	const stmt = db.prepare(`
     INSERT INTO config (key, value)
     VALUES (?, ?)
@@ -308,23 +308,4 @@ export function setConfigValue(key: string, value: string): void {
   `);
 
 	stmt.run(key, value);
-}
-
-/**
- * Get the database instance
- */
-export function getDatabase(): Database {
-	if (!db) {
-		throw new Error("Database not initialized. Call initDatabase() first.");
-	}
-	return db;
-}
-
-/**
- * Close the database connection
- */
-export function closeDatabase(): void {
-	if (db) {
-		db.close();
-	}
 }
