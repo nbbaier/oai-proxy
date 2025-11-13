@@ -27,10 +27,9 @@ app.use('*', async (c, next) => {
 // API routes
 app.route('/api', api);
 
-// Serve static files for dashboard
-app.get('/dashboard/styles.css', serveStatic({ path: './public/styles.css' }));
-app.get('/dashboard/app.js', serveStatic({ path: './public/app.js' }));
-app.get('/dashboard', serveStatic({ path: './public/index.html' }));
+// Serve static files for React dashboard
+app.use('/dashboard/*', serveStatic({ root: './dashboard/dist' }));
+app.get('/dashboard', serveStatic({ path: './dashboard/dist/index.html' }));
 
 // Health check at root
 app.get('/', (c) => {

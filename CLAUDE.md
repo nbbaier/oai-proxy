@@ -14,12 +14,18 @@ This is an OpenAI API proxy server that tracks token usage and enforces daily li
 
 ## Runtime and Commands
 
-**Use Bun, not Node.js:**
+**Backend (Use Bun, not Node.js):**
 - Run the server: `bun run index.ts` or `bun start`
 - Development mode with hot reload: `bun run dev` or `bun --watch index.ts`
-- Install dependencies: `bun install`
+- Install backend dependencies: `bun install`
 - Run tests: `bun test`
 - Docker: `bun run docker:build` and `bun run docker:run`
+
+**Frontend Dashboard (React + Vite):**
+- Install dashboard dependencies: `cd dashboard && npm install`
+- Development mode: `npm run dev:dashboard` (runs Vite dev server on port 5173)
+- Build for production: `npm run build:dashboard` (outputs to `dashboard/dist`)
+- Preview production build: `cd dashboard && npm run preview`
 
 **Note:** Bun automatically loads `.env` files - do not use dotenv package.
 
@@ -74,6 +80,26 @@ This is an OpenAI API proxy server that tracks token usage and enforces daily li
 - `GET /api/stats` - aggregate statistics
 - `POST /api/reconcile` - reconcile with OpenAI's actual usage
 
+**Dashboard:** `dashboard/` directory
+- React + Vite + TypeScript application
+- Tailwind CSS v3 for styling with custom dark theme
+- shadcn/ui components for consistent UI elements
+- Structure:
+  - `src/components/` - React components (UsageOverview, RequestHistory)
+  - `src/components/ui/` - shadcn/ui base components (Button, Card, Table, Progress, Badge)
+  - `src/hooks/` - Custom React hooks for API calls (useUsage, useHistory, useReconcile)
+  - `src/types/` - TypeScript type definitions matching backend API responses
+  - `src/lib/utils.ts` - Utility functions (cn, formatNumber, formatTimestamp)
+- Features:
+  - Real-time token usage overview with progress bars and percentage indicators
+  - Color-coded warnings (yellow at 75%, red at 90%)
+  - Paginated request history table
+  - One-click reconciliation with OpenAI
+  - Auto-refresh every 10 seconds
+  - Responsive design with mobile support
+- Development: Vite dev server proxies `/api` requests to backend (localhost:3000)
+- Production: Backend serves pre-built static files from `dashboard/dist`
+
 ### Key Design Decisions
 
 **UTC timezone:** All dates and daily resets use UTC to match OpenAI's reset schedule (00:00 UTC). Do not use local timezones.
@@ -101,7 +127,18 @@ Required environment variables (see `.env.example`):
 
 **Database changes:** The database is initialized on startup. Schema changes require migration logic or manual database deletion for development (production requires proper migrations).
 
-**TypeScript types:** All type definitions are in `src/types/index.ts`. Key types include `ModelTier`, `UsageRecord`, `RequestHistory`, `UsageStats`.
+**TypeScript types:**
+- Backend types: `src/types/index.ts` (ModelTier, UsageRecord, RequestHistory, UsageStats)
+- Dashboard types: `dashboard/src/types/api.ts` (API response types matching backend)
+- Keep frontend and backend types in sync when changing API responses
+
+**Dashboard development:**
+- Use shadcn/ui components for new UI elements: `npx shadcn@latest add [component]`
+- Follow the existing pattern: custom hooks for API calls, separate components for features
+- The Vite dev server proxies `/api/*` requests to the backend running on port 3000
+- When adding new API endpoints, update the proxy config in `dashboard/vite.config.ts` if needed
+- Path aliases: Use `@/` prefix for imports (e.g., `@/components/ui/button`)
+- Styling: Use Tailwind CSS utility classes and the predefined color system (primary, secondary, destructive, etc.)
 
 **Bun APIs used:**
 - `bun:sqlite` for database (not `better-sqlite3`)
@@ -118,4 +155,13 @@ Supports Docker and Fly.io (see `Dockerfile` and `fly.toml`). Database requires 
 - Docker: mount volume at `/app/db`
 - Fly.io: create volume with `fly volumes create oai_proxy_data --size 1`
 
-Set `OPENAI_API_KEY` as a secret in deployment platform (do not commit to `.env`).
+**Build steps:**
+1. Build the dashboard: `npm run build:dashboard` (creates `dashboard/dist`)
+2. Build the backend: Backend runs directly from TypeScript via Bun
+3. Ensure `dashboard/dist` is included in deployment (not in .dockerignore or .gitignore for production builds)
+
+**Environment variables:**
+- Set `OPENAI_API_KEY` as a secret in deployment platform (do not commit to `.env`)
+- Optionally set `OPENAI_ADMIN_KEY` if reconciliation feature is needed
+
+**Note:** The old static HTML dashboard in `public/` directory is deprecated and can be removed.

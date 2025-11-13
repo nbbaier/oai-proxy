@@ -8,6 +8,8 @@
   "scripts": {
     "start": "bun run index.ts",
     "dev": "bun --watch index.ts",
+    "dev:dashboard": "cd dashboard && npm run dev",
+    "build:dashboard": "cd dashboard && npm run build",
     "docker:build": "docker build -t oai-proxy .",
     "docker:run": "docker run -p 3000:3000 --env-file .env -v $(pwd)/db:/app/db oai-proxy"
   },
