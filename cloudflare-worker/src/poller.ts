@@ -162,14 +162,7 @@ async function checkAndSendAlerts(
 
         // Insert alert record
         const timestamp = Math.floor(Date.now() / 1000);
-        const result = await db
-          .prepare(
-            'INSERT INTO alerts (timestamp, tier, tokens_used, limit_value, percentage, message) VALUES (?, ?, ?, ?, ?, ?) RETURNING id'
-          )
-          .bind(timestamp, tier, tokens, limit, percentage, message)
-          .first<{ id: number }>();
-
-        const alertId = result?.id;
+        const alertId = await insertAlert(db, timestamp, tier, tokens, limit, percentage, message);
 
         // Send webhook if configured
         if (webhookUrl && alertId != null) {

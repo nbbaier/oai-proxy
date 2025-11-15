@@ -151,13 +151,15 @@ export async function insertAlert(
   limitValue: number,
   percentage: number,
   message: string
-): Promise<void> {
-  await db
+): Promise<number | null> {
+  const result = await db
     .prepare(
-      'INSERT INTO alerts (timestamp, tier, tokens_used, limit_value, percentage, message) VALUES (?, ?, ?, ?, ?, ?)'
+      'INSERT INTO alerts (timestamp, tier, tokens_used, limit_value, percentage, message) VALUES (?, ?, ?, ?, ?, ?) RETURNING id'
     )
     .bind(timestamp, tier, tokensUsed, limitValue, percentage, message)
-    .run();
+    .first<{ id: number }>();
+
+  return result?.id ?? null;
 }
 
 /**
