@@ -1,0 +1,25 @@
+name = "oai-usage-tracker"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+# Cron trigger - runs every 5 minutes
+[triggers]
+crons = ["*/5 * * * *"]
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "oai-usage"
+database_id = "your-database-id" # Run: wrangler d1 create oai-usage
+
+# Environment variables (set via wrangler secret put)
+# OPENAI_ADMIN_KEY - Required for fetching usage data
+# PREMIUM_TIER_LIMIT - Optional, defaults to 1000000
+# MINI_TIER_LIMIT - Optional, defaults to 10000000
+# ALERT_WEBHOOK_URL - Optional, for sending alerts when approaching limits
+# ALERT_THRESHOLD - Optional, percentage threshold for alerts (default: 80)
+
+[vars]
+PREMIUM_TIER_LIMIT = "1000000"
+MINI_TIER_LIMIT = "10000000"
+ALERT_THRESHOLD = "80"

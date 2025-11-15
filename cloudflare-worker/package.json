@@ -1,0 +1,24 @@
+{
+  "name": "oai-usage-tracker-cloudflare",
+  "version": "1.0.0",
+  "description": "OpenAI usage tracking via Cloudflare Workers with scheduled polling",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "db:create": "wrangler d1 create oai-usage",
+    "db:migrate": "wrangler d1 execute oai-usage --file=./schema.sql",
+    "db:migrate:local": "wrangler d1 execute oai-usage --local --file=./schema.sql",
+    "db:console": "wrangler d1 execute oai-usage --command",
+    "secret:put": "wrangler secret put"
+  },
+  "dependencies": {
+    "hono": "^4.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "wrangler": "^3.87.0",
+    "typescript": "^5.7.2"
+  }
+}

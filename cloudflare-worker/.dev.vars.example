@@ -1,0 +1,16 @@
+# Environment variables for local development
+# Copy this file to .dev.vars and fill in your values
+
+# Required: OpenAI Admin API Key
+# Get one from: https://platform.openai.com/settings/organization/admin-keys
+OPENAI_ADMIN_KEY=sk-admin-xxxxxxxx
+
+# Optional: Webhook URL for alerts (Slack, Discord, etc.)
+# ALERT_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+
+# Optional: Alert threshold percentage (default: 80)
+# ALERT_THRESHOLD=80
+
+# Optional: Daily limits (set in wrangler.toml [vars] section instead)
+# PREMIUM_TIER_LIMIT=1000000
+# MINI_TIER_LIMIT=10000000
