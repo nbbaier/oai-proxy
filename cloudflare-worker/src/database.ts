@@ -13,12 +13,12 @@ export async function insertSnapshot(
 ): Promise<number> {
   const result = await db
     .prepare(
-      'INSERT INTO usage_snapshots (timestamp, date, tier, tokens_used) VALUES (?, ?, ?, ?) ON CONFLICT(timestamp, tier) DO UPDATE SET tokens_used = ?'
+      'INSERT INTO usage_snapshots (timestamp, date, tier, tokens_used) VALUES (?, ?, ?, ?) ON CONFLICT(timestamp, tier) DO UPDATE SET tokens_used = ? RETURNING id'
     )
     .bind(timestamp, date, tier, tokens, tokens)
-    .run();
+    .first<{ id: number }>();
 
-  return result.meta.last_row_id || 0;
+  return result?.id || 0;
 }
 
 /**
