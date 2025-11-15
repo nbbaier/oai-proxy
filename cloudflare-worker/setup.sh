@@ -54,9 +54,8 @@ if echo "$DB_OUTPUT" | grep -q "database_id"; then
     read -p "Would you like to update wrangler.toml automatically? (y/n) " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        sed -i.bak "s/database_id = \"your-database-id\"/database_id = \"$DATABASE_ID\"/" wrangler.toml
+        sed "s/database_id = \"your-database-id\"/database_id = \"$DATABASE_ID\"/" wrangler.toml > wrangler.toml.tmp && mv wrangler.toml.tmp wrangler.toml
         echo "✅ Updated wrangler.toml"
-        rm wrangler.toml.bak
     fi
 elif echo "$DB_OUTPUT" | grep -q "already exists"; then
     echo "ℹ️  Database already exists, skipping creation"
