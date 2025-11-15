@@ -1,6 +1,22 @@
-# OpenAI Token Tracking Proxy
+# OpenAI Token Tracking
 
-A lightweight proxy server for OpenAI's API that tracks token usage and enforces daily limits to help you stay within free tier allocations. Built with Bun, TypeScript, and Hono.
+Track OpenAI API usage and stay within free tier allocations. Choose between two approaches:
+
+## 🔄 Proxy Approach (This Directory)
+A lightweight proxy server that intercepts requests, tracks usage in real-time, and enforces daily limits. Built with Bun, TypeScript, and Hono.
+
+**Best for:** Real-time enforcement, request blocking, detailed per-request logging
+
+## ☁️ Polling Approach ([`/cloudflare-worker`](./cloudflare-worker))
+A serverless Cloudflare Worker that polls OpenAI's usage API every few minutes and provides monitoring & alerts. Zero maintenance, free tier sufficient.
+
+**Best for:** Monitoring, historical analysis, serverless deployments, zero maintenance
+
+📊 **[See detailed comparison](./cloudflare-worker/COMPARISON.md)** to choose the right approach for your needs.
+
+---
+
+# Proxy Approach - Documentation
 
 ## Features
 
