@@ -129,12 +129,12 @@ export async function getCurrentUsageStats(db: D1Database, env: Env): Promise<Us
     premium: {
       tokens_used: premiumTokens,
       limit: premiumLimit,
-      percentage: Math.round((premiumTokens / premiumLimit) * 100),
+      percentage: premiumLimit > 0 ? Math.round((premiumTokens / premiumLimit) * 100) : 0,
     },
     mini: {
       tokens_used: miniTokens,
       limit: miniLimit,
-      percentage: Math.round((miniTokens / miniLimit) * 100),
+      percentage: miniLimit > 0 ? Math.round((miniTokens / miniLimit) * 100) : 0,
     },
     last_updated: premiumSnapshot?.timestamp || miniSnapshot?.timestamp || Date.now(),
   };

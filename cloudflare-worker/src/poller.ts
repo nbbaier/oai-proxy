@@ -172,7 +172,7 @@ async function checkAndSendAlerts(
         const alertId = result?.id;
 
         // Send webhook if configured
-        if (webhookUrl && alertId) {
+        if (webhookUrl && alertId != null) {
           try {
             await sendWebhookAlert(webhookUrl, message, tier, tokens, limit, percentage);
             await markAlertAsSent(db, alertId);
