@@ -144,6 +144,10 @@ async function checkAndSendAlerts(
   for (const tier of ['premium', 'mini'] as ModelTier[]) {
     const tokens = tierTotals[tier];
     const limit = getTierLimit(tier, env);
+    if (limit <= 0) {
+      console.warn(`Invalid limit (${limit}) for tier "${tier}". Skipping alert check.`);
+      continue;
+    }
     const percentage = Math.round((tokens / limit) * 100);
 
     // Check if we've crossed the threshold
