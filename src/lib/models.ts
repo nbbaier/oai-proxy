@@ -37,13 +37,13 @@ const MINI_MODELS = [
  * @returns The model tier ('premium' or 'mini')
  */
 export function getModelTier(model: string): ModelTier {
+	// Check mini first: mini prefixes extend premium ones (gpt-4o-mini vs gpt-4o)
+	const isMini = MINI_MODELS.some((prefix) => model.startsWith(prefix));
+	if (isMini) return "mini";
+
 	// Check if model starts with any of the premium model prefixes
 	const isPremium = PREMIUM_MODELS.some((prefix) => model.startsWith(prefix));
 	if (isPremium) return "premium";
-
-	// Check if model starts with any of the mini model prefixes
-	const isMini = MINI_MODELS.some((prefix) => model.startsWith(prefix));
-	if (isMini) return "mini";
 
 	// Default to premium tier for unknown models (safer, more restrictive)
 	console.warn(`Unknown model "${model}" - defaulting to premium tier`);
