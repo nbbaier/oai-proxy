@@ -1,5 +1,4 @@
 import { RefreshCw } from "lucide-react";
-import { Models } from "openai/resources.js";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

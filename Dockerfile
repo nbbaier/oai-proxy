@@ -5,24 +5,26 @@ WORKDIR /app
 # Install dependencies
 FROM base AS install
 RUN mkdir -p /temp/prod
-COPY package.json bun.lockb /temp/prod/
+COPY package.json bun.lock /temp/prod/
 RUN cd /temp/prod && bun install --frozen-lockfile --production
 
-# Copy application code
-FROM base AS prerelease
-COPY --from=install /temp/prod/node_modules node_modules
-COPY . .
+# Build the React dashboard
+FROM base AS dashboard
+WORKDIR /app/dashboard
+COPY dashboard/package.json dashboard/bun.lock ./
+RUN bun install --frozen-lockfile
+COPY dashboard/ ./
+RUN bun run build
 
 # Final production image
 FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /app/index.ts .
-COPY --from=prerelease /app/src ./src
-COPY --from=prerelease /app/public ./public
-COPY --from=prerelease /app/tsconfig.json .
+COPY index.ts tsconfig.json ./
+COPY src ./src
+COPY --from=dashboard /app/dashboard/dist ./dashboard/dist
 
 # Create database directory
-RUN mkdir -p /app/db
+RUN mkdir -p /app/db && chown bun:bun /app/db
 
 # Expose port
 EXPOSE 3000

@@ -271,10 +271,7 @@ oai-proxy/
 │   │   └── api.ts         # API endpoints
 │   └── types/
 │       └── index.ts       # TypeScript interfaces
-├── public/
-│   ├── index.html         # Dashboard HTML
-│   ├── styles.css         # Dashboard styles
-│   └── app.js             # Dashboard JavaScript
+├── dashboard/             # React dashboard (built to dashboard/dist)
 ├── db/                    # SQLite database (created automatically)
 ├── index.ts               # Main server entry point
 ├── Dockerfile             # Docker configuration

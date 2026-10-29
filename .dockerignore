@@ -4,11 +4,10 @@
 
 # Documentation
 *.md
-CLAUDE.md
 .cursor
 
 # Node modules (will be installed during build)
-node_modules
+**/node_modules
 
 # Environment files
 .env
@@ -31,7 +30,7 @@ logs
 .DS_Store
 
 # Build artifacts
-dist
+**/dist
 out
 *.tgz
 
